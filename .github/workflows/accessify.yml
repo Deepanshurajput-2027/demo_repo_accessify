@@ -1,0 +1,12 @@
+name: Accessify Live Scan
+on: [deployment_status]
+jobs:
+  scan:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Accessify Cloud Scanner
+        run: |
+          curl -X POST "https://rtvalnyzncqauwklfmtq.supabase.co/functions/v1/github-action-handler?secret=2b77cb93-6adc-4e62-bb24-8e122de9e711" \
+          -H "Content-Type: application/json" \
+          -d '{"previewUrl": "${{ github.event.deployment_status.environment_url }}", "repo": "${{ github.repository }}", "sha": "${{ github.sha }}"}'
